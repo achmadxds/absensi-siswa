@@ -1,11 +1,18 @@
 <?php
-  include '../include.php';
-  if(!$_SESSION['login'])
-    header('Location: ../login.php');
-  elseif (!$_SESSION['user'])
+  include 'include.php';
+
+  if (!$_SESSION['siswa'])
     header('Location: ../login.php');
 
-  // if($_SESSION[''])
+  if($_SESSION['admin'])
+    header('Location: ../admin/dashboard.php');
+
+  if(isset($_POST['logout'])) {
+    $_SESSION['siswa'] = false;
+    $_SESSION['username'] = "";
+    header('Location: ../login.php');
+    exit;
+  }
 ?>
 
 <!-- Topbar -->

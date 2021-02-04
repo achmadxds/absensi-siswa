@@ -4,8 +4,8 @@
 
   if($_SESSION['admin'])
     header('Location: admin/dashboard.php');
-  elseif (!$_SESSION['user'])
-    header('Location: user/dashboard.php');
+  elseif ($_SESSION['siswa'])
+    header('Location: siswa/dashboard.php');
 ?>
   
 <!DOCTYPE html>
@@ -32,9 +32,6 @@
   <div class="content">
     <div class="container">
       <div class="row justify-content-center">
-        <!-- <div class="col-md-6 order-md-2">
-          <img src="images/undraw_file_sync_ot38.svg" alt="Image" class="img-fluid">
-        </div> -->
         <div class="col-md-6 contents">
           <div class="row justify-content-center">
             <div class="col-md-12">

@@ -5,6 +5,17 @@
 		echo "koneksi database gagal : " . mysqli_connect_error();
 	}
 
+	function query($query)
+	{
+	  global $connect;
+	  $result   = mysqli_query($connect, $query);
+	  $rows     = [];
+	  while ($row = mysqli_fetch_assoc($result)) {
+	    $rows[] = $row;
+	  }
+	  return $rows;
+	}
+
 	function Login() {
 		global $conn;
 
@@ -17,10 +28,12 @@
 				if(password_verify($password, $row['password'])) {
 					if($row['is_admin'] == 1){
 						$_SESSION['admin'] = true;
-						$_SESSION['nama']  = $username;
+						$_SESSION['username'] = $username;
 						header('Location: admin/dashboard.php');
 						exit;
 					} else {
+						$_SESSION['siswa'] = true;
+						$_SESSION['username'] = $username;
 						header('Location: siswa/dashboard.php');
 						exit;
 					}
@@ -47,7 +60,7 @@
 			$confirmPassword = mysqli_escape_string($conn, $_POST['confirmPassword']);
 			$is_admin        = 0;
 
-			$result          = mysqli_query($conn, 'SELECT `username` FROM `users` WHERE `username`="'.$username.'" ');
+			$result          = mysqli_query($conn, 'SELECT `username`, `email` FROM `users` WHERE `username`="'.$username.'" ');
 			if(mysqli_fetch_assoc($result)) {
 				echo "<script> alert('EMAIL / USERNAME TELAH TERPAKAI!') </script>";
 				return false;
@@ -55,14 +68,28 @@
 
 			if($password != $confirmPassword){
 				echo "<script> alert('KONFIRMASI PASSWORD TIDAK SESUAI!') </script>";
-				return false;	
+				return false;
 			}
 
 			$password = password_hash($password, PASSWORD_DEFAULT);
 			$query    = 'INSERT INTO `users` (`username`, `password`, `email`, `is_admin`) VALUES ("'.$username.'", "'.$password.'", "'.$email.'", '.$is_admin.') ';
-			mysqli_query($conn, $query);
+			mysqli_query($conn, $query);			
 
 			return mysqli_affected_rows($conn);
+		}
+	}
+
+	function Absen()
+	{
+		global $conn;
+
+		$qr       = mysqli_query($conn, 'SELECT `username`, `nama`, `no_absen`, `kelas` FROM `users` WHERE `username`="'.$_SESSION['username'].'" ');
+		$row      = mysqli_fetch_assoc($qr);
+		$is_absen = '1';
+
+		if(isset($_POST['task']) == "absensubmit"){
+			mysqli_query($conn, 'UPDATE `users` SET `is_absen`="'.$is_absen.'" WHERE `username`="'.$_SESSION['username'].'" ');
+			exit;
 		}
 	}
 ?>
