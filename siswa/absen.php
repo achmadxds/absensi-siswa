@@ -1,5 +1,5 @@
 <?php 
-  include '../templateSiswa/header.php';
+include '../templateSiswa/header.php';
 include '../include.php';
 ?>
 
@@ -10,17 +10,23 @@ include '../include.php';
       <div id="content">
         <?php include '../templateSiswa/navbar.php'; Absen(); ?>
         <div class="container">
+          <div class="row text-center" id="shyt">
+            
+          </div>
           <?php  
             $qr       = mysqli_query($conn, 'SELECT `is_absen` FROM `users` WHERE `username`="'.$_SESSION['username'].'" ');
             $row      = mysqli_fetch_assoc($qr);
 
             if($row['is_absen'] == '1'){
-              echo "<h5> SUDAH ABSEN </h5>";
-            }
-            else{
               ?>
-                <div class="row">
-                  <button> ABSEN </button>
+                <div class="row" id="sudahabsen">
+                  <h5> SUDAH ABSEN </h5>
+                </div>
+              <?php
+            } else {
+              ?>
+                <div class="row" id="submitshow">
+                  <button id="submitabsen"> ABSEN </button>
                 </div>
               <?php
             }
